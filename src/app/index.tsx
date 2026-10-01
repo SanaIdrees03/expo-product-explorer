@@ -37,6 +37,11 @@ export default function HomeScreen() {
           <ThemedText type="title" style={styles.title}>
             Welcome to&nbsp;Expo
           </ThemedText>
+
+          <ThemedText type="subtitle" style={styles.studentInfo}>
+            Sana Idrees - 23i2039
+          </ThemedText>
+
         </ThemedView>
 
         <ThemedText type="code" style={styles.code}>
@@ -62,6 +67,16 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+
+  title: {
+    textAlign: 'center',
+  },
+  studentinfo: {
+    textAlign: 'center',
+    fontsize: 9,
+    fontWeight: '300',
+    marginTop: 0,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -80,10 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
+    gap: Spacing.one,
   },
   code: {
     textTransform: 'uppercase',

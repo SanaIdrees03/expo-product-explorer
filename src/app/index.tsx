@@ -1,9 +1,10 @@
 import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { Image } from 'expo-image';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
@@ -11,54 +12,63 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
+    return 'Use browser devtools';
   }
   if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
+    return 'Shake device or press m in terminal';
   }
   const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
+  return `Press ${shortcut}`;
 }
 
 export default function HomeScreen() {
+  const [showDetails, setShowDetails] = useState(false);
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ThemedView style={styles.heroSection}>
           <AnimatedIcon />
           <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
+            Product Explorer
           </ThemedText>
-
           <ThemedText type="subtitle" style={styles.studentInfo}>
-            Sana Idrees - 23i2039
+            Sana Idrees — 23i-2039
           </ThemedText>
-
         </ThemedView>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
+        <ThemedView style={styles.productCard}>
+          <Image
+            accessibilityLabel="Wireless headphones"
+            source={{
+              uri: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80',
+            }}
+            style={styles.productImage}
+            contentFit="cover"
+          />
+          <ThemedView style={styles.productDetails}>
+            <ThemedText type="subtitle">Wireless Headphones</ThemedText>
+            <ThemedText style={styles.price}>PKR 4,999</ThemedText>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded: showDetails }}
+              onPress={() => setShowDetails((visible) => !visible)}
+              style={styles.detailsButton}
+            >
+              <ThemedText style={styles.detailsButtonText}>
+                {showDetails ? 'Hide Details' : 'View Details'}
+              </ThemedText>
+            </Pressable>
+            {showDetails && (
+              <ThemedText style={styles.description}>
+                Enjoy clear, balanced sound and comfortable listening with these wireless headphones.
+              </ThemedText>
+            )}
+          </ThemedView>
+        </ThemedView>
+
+        <ThemedText type="small" style={styles.devHint}>
+          {getDevMenuHint()}
         </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
 
         {Platform.OS === 'web' && <WebBadge />}
       </SafeAreaView>
@@ -67,16 +77,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-
-  title: {
-    textAlign: 'center',
-  },
-  studentinfo: {
-    textAlign: 'center',
-    fontsize: 9,
-    fontWeight: '300',
-    marginTop: 0,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -93,18 +93,62 @@ const styles = StyleSheet.create({
   heroSection: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
     paddingHorizontal: Spacing.four,
     gap: Spacing.one,
   },
-  code: {
-    textTransform: 'uppercase',
+  title: {
+    textAlign: 'center',
   },
-  stepContainer: {
-    gap: Spacing.three,
+  studentInfo: {
+    textAlign: 'center',
+  },
+  productCard: {
     alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
+    overflow: 'hidden',
     borderRadius: Spacing.four,
+    backgroundColor: '#ffffff',
+    elevation: 2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+  },
+  productImage: {
+    width: '100%',
+    height: 65,
+    backgroundColor: '#e8e8e8',
+  },
+  productDetails: {
+    padding: Spacing.three,
+    gap: Spacing.one,
+  },
+  price: {
+    marginTop: Spacing.one,
+    marginBottom: Spacing.one,
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '700',
+    color: '#276749',
+  },
+  detailsButton: {
+    alignSelf: 'flex-start',
+    marginTop: Spacing.one,
+    paddingVertical: Spacing.one,
+    paddingHorizontal: Spacing.two,
+  },
+  detailsButtonText: {
+    color: '#276749',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  description: {
+    marginTop: Spacing.two,
+    color: '#343434',
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  devHint: {
+    textAlign: 'center',
   },
 });
+

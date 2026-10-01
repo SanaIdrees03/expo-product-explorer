@@ -1,3 +1,4 @@
+```yaml
 name: Expo CI
 
 on:
@@ -20,14 +21,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Type check
         run: npx tsc --noEmit
 
       - name: Expo web export
         run: npx expo export --platform web
+```
